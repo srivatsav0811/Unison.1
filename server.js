@@ -487,6 +487,7 @@ const cleanName = (n) => String(n || '').trim().replace(/\s+/g, ' ').slice(0, 20
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
   try {
+    if (url.pathname === '/healthz') { res.writeHead(200); return res.end('ok'); }
     if (url.pathname === '/api/players' && req.method === 'GET') {
       res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=3600' });
       return res.end(JSON.stringify(PLAYERS));
@@ -549,6 +550,6 @@ const server = http.createServer(async (req, res) => {
 });
 
 if (require.main === module) {
-  server.listen(PORT, () => console.log(`Unison IPL Auction running on http://localhost:${PORT}`));
+  server.listen(PORT, '0.0.0.0', () => console.log(`Unison IPL Auction running on http://localhost:${PORT}`));
 }
 module.exports = { server, rooms, CFG };

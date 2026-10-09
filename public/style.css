@@ -194,3 +194,9 @@ button.prow:hover { border-color: var(--line); }
   .stage .avatar { width: 84px; height: 84px; font-size: 32px; }
   .bidbox .amt { font-size: 46px; }
 }
+
+.choices { display: grid; gap: 14px; }
+.choice { display: grid; gap: 4px; text-align: left; padding: 22px 24px; border-radius: 16px; border: 1px solid var(--line); background: linear-gradient(180deg, var(--card2), var(--card)); transition: transform .1s, border-color .15s; }
+.choice:hover { transform: translateY(-2px); border-color: var(--gold); }
+.choice b { font-family: var(--display); font-size: 30px; letter-spacing: .04em; font-weight: 400; }
+.choice .ci { font-size: 34px; }

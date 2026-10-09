@@ -12,6 +12,7 @@ const ui = {
   tab: 'pool', search: '', role: 'ALL', status: 'avail', limit: 60, selPid: null, baseCr: '',
   teamName: undefined, teamColor: undefined, budgetDraft: null, addOpen: false,
   trade: { to: '', give: new Set(), get: new Set(), dir: 'pay', cash: '' }, ovKey: null, conn: 'ok',
+  homeMode: new URLSearchParams(location.search).get('code') ? 'join' : '',
   homeName: localStorage.getItem('unison.name') || '', homeCode: (new URLSearchParams(location.search).get('code') || '').toUpperCase(),
 };
 
@@ -124,6 +125,26 @@ function shell() {
 
 // ---------- home ----------
 function homeView() {
+  const mode = ui.homeMode;
+  const nameField = `<label class="field" for="homeName">Your name</label>
+      <input id="homeName" class="input" maxlength="20" placeholder="e.g. Ravi" value="${esc(ui.homeName)}" data-bind="homeName">`;
+  let panel;
+  if (mode === 'host') {
+    panel = `<div class="card"><h3>Host a game</h3>${nameField}
+      <p class="small muted mt-s">You'll get a room code to share. You can be the auctioneer or play as a team.</p>
+      <button class="btn primary big mt" style="width:100%" data-act="create">Create room</button>
+      <button class="btn sm mt-s" data-act="homemode" data-mode="">← Back</button></div>`;
+  } else if (mode === 'join') {
+    panel = `<div class="card"><h3>Enter code</h3>${nameField}
+      <label class="field mt-s" for="homeCode">Room code</label>
+      <input id="homeCode" class="input codeinput" maxlength="5" placeholder="CODE" value="${esc(ui.homeCode)}" data-bind="homeCode">
+      <button class="btn primary big mt" style="width:100%" data-act="join">Join game</button>
+      <button class="btn sm mt-s" data-act="homemode" data-mode="">← Back</button></div>`;
+  } else {
+    panel = `<div class="choices">
+      <button class="choice" data-act="homemode" data-mode="host"><span class="ci">🔨</span><b>Host a game</b><span class="muted">Create a room and get a code to share</span></button>
+      <button class="choice" data-act="homemode" data-mode="join"><span class="ci">🔑</span><b>Enter code</b><span class="muted">Join a friend's auction with their code</span></button></div>`;
+  }
   return `
   <main><div class="home">
     <div class="hero">
@@ -136,16 +157,7 @@ function homeView() {
         <div>SOLD / UNSOLD stamps</div><div>Empty purse = no more bidding</div>
       </div>
     </div>
-    <div class="card">
-      <label class="field" for="homeName">Your name</label>
-      <input id="homeName" class="input" maxlength="20" placeholder="e.g. Ravi" value="${esc(ui.homeName)}" data-bind="homeName">
-      <button class="btn primary big mt" style="width:100%" data-act="create">Create a room</button>
-      <div class="row mt" style="color:var(--muted)"><hr class="grow" style="border:0;border-top:1px solid var(--line)">or join with a code<hr class="grow" style="border:0;border-top:1px solid var(--line)"></div>
-      <div class="row mt-s">
-        <input id="homeCode" class="input codeinput" maxlength="5" placeholder="CODE" value="${esc(ui.homeCode)}" data-bind="homeCode">
-        <button class="btn big" data-act="join">Join</button>
-      </div>
-    </div>
+    ${panel}
   </div></main>`;
 }
 
@@ -563,6 +575,7 @@ document.addEventListener('click', async (e) => {
       try { const j = await api('/api/room'); await enter(j.code); } catch (err) { toast(err.message); }
       break;
     }
+    case 'homemode': ui.homeMode = d.mode; render(); document.getElementById('homeName')?.focus(); break;
     case 'join': if (ui.homeCode.trim().length < 5) toast('Enter the 5-letter room code.'); else enter(ui.homeCode.trim()); break;
     case 'leave': await act('leave'); leaveLocal(); break;
     case 'newroom': leaveLocal(); break;

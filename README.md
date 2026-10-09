@@ -9,6 +9,16 @@ npm test             # plays a full auction end-to-end against the server
 
 Everyone opens the same URL. Host it on any machine that can run Node; it is not a static site, because the server holds the live auction state.
 
+## Put it online (free)
+
+The app is one Node process, so it needs a host that runs Node (not GitHub Pages). On **Render**:
+
+1. Go to https://render.com/deploy?repo=https://github.com/srivatsav0811/Unison.1 (sign in with GitHub).
+2. Render reads `render.yaml`, builds and starts the service. You get a public link like `https://unison-ipl-auction.onrender.com`.
+3. Share that link. The home screen has **Host a game** and **Enter code**.
+
+A `Dockerfile` is included for Fly.io, Railway, Google Cloud Run, etc. (it listens on `$PORT`). Free tiers sleep when idle, so the first visit after a quiet spell takes ~30 s to wake, and a restart ends any auction in progress.
+
 ## How a game runs
 
 1. **Lobby** – someone creates a room and shares the 5-letter code (or the invite link). Up to 6 people join. One picks **Auctioneer**; the other five pick **Team**, name their franchise and choose a unique colour, then **Lock in**.

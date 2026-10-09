@@ -1,0 +1,9 @@
+# One-click deploy: https://render.com/deploy?repo=https://github.com/srivatsav0811/Unison.1
+services:
+  - type: web
+    name: unison-ipl-auction
+    runtime: node
+    plan: free
+    buildCommand: "echo no build step"
+    startCommand: node server.js
+    healthCheckPath: /healthz
