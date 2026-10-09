@@ -1,0 +1,12 @@
+{
+  "name": "unison-ipl-auction",
+  "version": "1.0.0",
+  "description": "Live multiplayer IPL-style auction: 1 auctioneer, 5 teams, 20-second lots.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/smoke.js"
+  },
+  "engines": { "node": ">=18" },
+  "license": "MIT"
+}
